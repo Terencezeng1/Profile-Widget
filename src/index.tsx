@@ -1,19 +1,5 @@
-/*!
- * Copyright 2024, Staffbase GmbH and contributors.
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 import React from "react";
 import ReactDOM from "react-dom/client";
-
 import {
   BlockFactory,
   BlockDefinition,
@@ -41,35 +27,26 @@ const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
 
     private get props(): ProfileWidgetProps {
       const attrs = this.parseAttributes<ProfileWidgetProps>();
-      return {
-        ...attrs,
-        contentLanguage: this.contentLanguage,
-      };
+      return { ...attrs, contentLanguage: this.contentLanguage };
     }
 
     public async renderBlock(container: HTMLElement): Promise<void> {
-      // Official SDK method to get the current user information
+      // Official way to get authenticated user data in Staffbase
       const user = await _widgetApi.getUserInformation();
 
       this._root ??= ReactDOM.createRoot(container);
       this._root.render(<ProfileWidget {...this.props} user={user} />);
     }
 
-    /**
-     * The observed attributes, where the widgets reacts on.
-     */
     public static get observedAttributes(): string[] {
       return widgetAttributes;
     }
 
-    /**
-     * Callback invoked on every change of an observed attribute.
-     */
     public attributeChangedCallback(
       ...args: [string, string | undefined, string | undefined]
     ): void {
       super.attributeChangedCallback.apply(this, args);
-      // Trigger a re-render so the widget updates immediately when config changes
+      // Ensures the widget updates the moment you click 'OK' in Studio
       this.renderBlock(this);
     }
   };
