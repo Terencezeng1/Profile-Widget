@@ -15,41 +15,61 @@ export const ProfileWidget = ({
   accentcolor,
   user,
 }: ProfileWidgetProps): ReactElement => {
-  const { data } = useUserProfile(profilefieldid, user);
+  // Logic Fix: Split the IDs and create a list of labels and values
+  const fieldIds = profilefieldid
+    ? profilefieldid.split(",").map((id) => id.trim())
+    : [];
 
-  const cardStyle: React.CSSProperties = {
+  const tableStyle: React.CSSProperties = {
     backgroundColor: "#fff",
     borderRadius: "12px",
-    padding: "24px",
+    padding: "20px",
     borderLeft: `6px solid ${accentcolor || "#00A1DF"}`,
     boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
     fontFamily: "sans-serif",
     margin: "10px",
+    width: "100%",
+    maxWidth: "450px",
+  };
+
+  const rowStyle: React.CSSProperties = {
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "10px 0",
+    borderBottom: "1px solid #f1f5f9",
   };
 
   return (
-    <div style={cardStyle}>
-      <span
+    <div style={tableStyle}>
+      <h3
         style={{
-          fontSize: "10px",
-          fontWeight: "bold",
-          color: "#94a3b8",
+          margin: "0 0 15px 0",
+          color: "#64748b",
+          fontSize: "12px",
           textTransform: "uppercase",
-          display: "block",
         }}
       >
-        {fieldlabel || "User Data"}
-      </span>
-      <h2
-        style={{
-          fontSize: "22px",
-          fontWeight: 700,
-          color: "#1e293b",
-          margin: "4px 0 0 0",
-        }}
-      >
-        {user ? data || "N/A" : "Loading..."}
-      </h2>
+        {fieldlabel || "Profile Data"}
+      </h3>
+
+      {!user ? (
+        <p>Loading...</p>
+      ) : (
+        fieldIds.map((id) => {
+          // Get value for each ID from the user object or profile sub-object
+          const val = user[id] || user.profile?.[id] || "N/A";
+          return (
+            <div key={id} style={rowStyle}>
+              <span
+                style={{ fontWeight: 600, color: "#475569", fontSize: "14px" }}
+              >
+                {id}:
+              </span>
+              <span style={{ color: "#1e293b", fontSize: "14px" }}>{val}</span>
+            </div>
+          );
+        })
+      )}
     </div>
   );
 };
