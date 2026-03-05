@@ -31,7 +31,7 @@ const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
     }
 
     public async renderBlock(container: HTMLElement): Promise<void> {
-      // Official way to get authenticated user data in Staffbase
+      // Use the SDK to get real user data
       const user = await _widgetApi.getUserInformation();
 
       this._root ??= ReactDOM.createRoot(container);
@@ -43,11 +43,15 @@ const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
     }
 
     public attributeChangedCallback(
-      ...args: [string, string | undefined, string | undefined]
+      name: string,
+      oldValue: string,
+      newValue: string,
     ): void {
-      super.attributeChangedCallback.apply(this, args);
-      // Ensures the widget updates the moment you click 'OK' in Studio
-      this.renderBlock(this);
+      super.attributeChangedCallback(name, oldValue, newValue);
+      // Force a re-render to ensure settings 'stick' and update the UI
+      if (oldValue !== newValue) {
+        this.renderBlock(this);
+      }
     }
   };
 };
