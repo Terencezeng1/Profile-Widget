@@ -3,9 +3,9 @@ import { BlockAttributes } from "widget-sdk";
 import { useUserProfile } from "./hooks/use-user-profile";
 
 export interface ProfileWidgetProps extends BlockAttributes {
-  fieldlabel: string; // Lowercase
-  profilefieldid: string; // Lowercase
-  accentcolor: string; // Lowercase
+  fieldlabel: string;
+  profilefieldid: string;
+  accentcolor: string;
   user?: any;
 }
 
@@ -15,7 +15,6 @@ export const ProfileWidget = ({
   accentcolor,
   user,
 }: ProfileWidgetProps): ReactElement => {
-  // Pass the lowercase ID to your hook
   const { data } = useUserProfile(profilefieldid, user);
 
   const cardStyle: React.CSSProperties = {

@@ -11,10 +11,7 @@ import { configurationSchema, uiSchema } from "./configuration-schema";
 import icon from "../resources/profile-widget.svg";
 import pkg from "../package.json";
 
-/**
- * Lowercase attributes match the 'Celebration Widget' pattern
- * to ensure maximum compatibility with Staffbase Studio saving logic.
- */
+// Must be lowercase to match the schema properties exactly
 const widgetAttributes: string[] = [
   "fieldlabel",
   "profilefieldid",
@@ -31,10 +28,7 @@ const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
 
     private get props(): ProfileWidgetProps {
       const attrs = this.parseAttributes<ProfileWidgetProps>();
-      return {
-        ...attrs,
-        contentLanguage: this.contentLanguage,
-      };
+      return { ...attrs, contentLanguage: this.contentLanguage };
     }
 
     public async renderBlock(container: HTMLElement): Promise<void> {
@@ -52,11 +46,9 @@ const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
       oldValue: string,
       newValue: string,
     ): void {
-      super.attributeChangedCallback(name, oldValue, newValue);
-      // Force a re-render so Staffbase Studio 'sees' the save happen
-      if (oldValue !== newValue) {
-        this.renderBlock(this);
-      }
+      super.attributeChangedCallback.apply(this, [name, oldValue, newValue]);
+      // This is the 'Celebration Widget' fix: Force a re-render so the Studio 'saves' the state
+      this.renderBlock(this);
     }
   };
 };
