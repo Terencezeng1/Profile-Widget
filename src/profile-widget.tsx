@@ -1,24 +1,7 @@
-/*!
- * Copyright 2024, Staffbase GmbH and contributors.
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 import React, { ReactElement } from "react";
 import { BlockAttributes } from "widget-sdk";
-// Updated import to match your hyphenated filename
 import { useUserProfile } from "./hooks/use-user-profile";
 
-/**
- * React Component
- */
 export interface ProfileWidgetProps extends BlockAttributes {
   fieldLabel: string;
   profileFieldId: string;
@@ -32,35 +15,62 @@ export const ProfileWidget = ({
 }: ProfileWidgetProps): ReactElement => {
   const { data, loading, error } = useUserProfile(profileFieldId);
 
-  return (
-    <div className="flex items-center justify-center p-4 antialiased">
-      <div
-        className="w-full max-w-md bg-white/95 backdrop-blur-3xl p-6 transition-all duration-500"
-        style={{
-          borderRadius: "24px",
-          borderLeft: `6px solid ${accentColor || "#00A1DF"}`,
-          boxShadow: "0 8px 30px -10px rgba(0,0,0,0.08)",
-        }}
-      >
-        <div className="flex flex-col gap-1">
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 text-slate-800">
-            {fieldLabel || "Profile Information"}
-          </span>
+  // Styling for the "Look Fix"
+  const containerStyle: React.CSSProperties = {
+    padding: "20px",
+    display: "flex",
+    justifyContent: "center",
+    fontFamily: "Arial, sans-serif",
+  };
 
-          <div className="flex items-baseline gap-2">
-            {loading ? (
-              <div className="h-8 w-32 bg-slate-200 animate-pulse rounded-lg" />
-            ) : error ? (
-              <span className="text-red-400 text-sm font-medium">
-                Error loading data
-              </span>
-            ) : (
-              <h2 className="text-3xl font-bold tracking-tight text-slate-800 break-words leading-tight">
-                {data}
-              </h2>
-            )}
-          </div>
-        </div>
+  const cardStyle: React.CSSProperties = {
+    backgroundColor: "#fff",
+    borderRadius: "12px",
+    padding: "24px",
+    width: "100%",
+    maxWidth: "350px",
+    boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+    borderLeft: `5px solid ${accentColor || "#00A1DF"}`,
+    transition: "all 0.3s ease",
+  };
+
+  const labelStyle: React.CSSProperties = {
+    fontSize: "10px",
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    letterSpacing: "1.2px",
+    color: "#94a3b8",
+    marginBottom: "4px",
+    display: "block",
+  };
+
+  const valueStyle: React.CSSProperties = {
+    fontSize: "22px",
+    fontWeight: 700,
+    color: "#1e293b",
+    margin: 0,
+  };
+
+  // Helper to show dummy data on localhost so you aren't stuck on "Loading"
+  const isLocal = window.location.hostname === "localhost";
+  const displayData = isLocal ? "Sample Data" : data;
+  const isPending = isLocal ? false : loading;
+
+  return (
+    <div style={containerStyle}>
+      <div style={cardStyle}>
+        <span style={labelStyle}>{fieldLabel || "User Data"}</span>
+        {isPending ? (
+          <p style={{ color: "#cbd5e1", fontSize: "14px", margin: 0 }}>
+            Loading...
+          </p>
+        ) : error && !isLocal ? (
+          <p style={{ color: "#ef4444", fontSize: "14px", margin: 0 }}>
+            Data unavailable
+          </p>
+        ) : (
+          <h2 style={valueStyle}>{displayData || "N/A"}</h2>
+        )}
       </div>
     </div>
   );

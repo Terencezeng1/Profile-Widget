@@ -25,19 +25,12 @@ import { configurationSchema, uiSchema } from "./configuration-schema";
 import icon from "../resources/profile-widget.svg";
 import pkg from "../package.json";
 
-/**
- * Define which attributes are handled by the widget.
- * These must match the keys in your configurationSchema.
- */
 const widgetAttributes: string[] = [
   "fieldLabel",
   "profileFieldId",
   "accentColor",
 ];
 
-/**
- * This factory creates the class which is registered with the tagname in the `custom element registry`
- */
 const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
   return class ProfileWidgetBlock extends BaseBlockClass implements BaseBlock {
     private _root: ReactDOM.Root | null = null;
@@ -59,27 +52,20 @@ const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
       this._root.render(<ProfileWidget {...this.props} />);
     }
 
-    /**
-     * The observed attributes, where the widgets reacts on.
-     */
     public static get observedAttributes(): string[] {
       return widgetAttributes;
     }
 
-    /**
-     * Callback invoked on every change of an observed attribute.
-     */
     public attributeChangedCallback(
       ...args: [string, string | undefined, string | undefined]
     ): void {
       super.attributeChangedCallback.apply(this, args);
+      // Logic Fix: This tells the widget to re-draw when settings change
+      this.renderBlock(this);
     }
   };
 };
 
-/**
- * The definition of the block, to let it successful register to the hosting application
- */
 const blockDefinition: BlockDefinition = {
   name: "profile-widget",
   factory: factory,
@@ -91,16 +77,10 @@ const blockDefinition: BlockDefinition = {
   iconUrl: icon,
 };
 
-/**
- * Wrapping definition, which defines meta informations about the block.
- */
 const externalBlockDefinition: ExternalBlockDefinition = {
   blockDefinition,
   author: pkg.author,
   version: pkg.version,
 };
 
-/**
- * This call is mandatory to register the block in the hosting application.
- */
 window.defineBlock(externalBlockDefinition);
