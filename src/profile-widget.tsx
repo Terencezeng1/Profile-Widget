@@ -3,25 +3,26 @@ import { BlockAttributes } from "widget-sdk";
 import { useUserProfile } from "./hooks/use-user-profile";
 
 export interface ProfileWidgetProps extends BlockAttributes {
-  fieldLabel: string;
-  profileFieldId: string;
-  accentColor: string;
+  fieldlabel: string; // Lowercase
+  profilefieldid: string; // Lowercase
+  accentcolor: string; // Lowercase
   user?: any;
 }
 
 export const ProfileWidget = ({
-  fieldLabel,
-  profileFieldId,
-  accentColor,
+  fieldlabel,
+  profilefieldid,
+  accentcolor,
   user,
 }: ProfileWidgetProps): ReactElement => {
-  const { data } = useUserProfile(profileFieldId, user);
+  // Pass the lowercase ID to your hook
+  const { data } = useUserProfile(profilefieldid, user);
 
   const cardStyle: React.CSSProperties = {
     backgroundColor: "#fff",
     borderRadius: "12px",
     padding: "24px",
-    borderLeft: `6px solid ${accentColor || "#00A1DF"}`,
+    borderLeft: `6px solid ${accentcolor || "#00A1DF"}`,
     boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
     fontFamily: "sans-serif",
     margin: "10px",
@@ -38,7 +39,7 @@ export const ProfileWidget = ({
           display: "block",
         }}
       >
-        {fieldLabel || "User Data"}
+        {fieldlabel || "User Data"}
       </span>
       <h2
         style={{

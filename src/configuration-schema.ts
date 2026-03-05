@@ -3,19 +3,19 @@ import { JSONSchema7 } from "json-schema";
 
 export const configurationSchema: JSONSchema7 = {
   type: "object",
-  required: ["profileFieldId"],
+  required: ["profilefieldid"],
   properties: {
-    fieldLabel: {
+    fieldlabel: {
       type: "string",
       title: "Display Label",
       default: "Profile Information",
     },
-    profileFieldId: {
+    profilefieldid: {
       type: "string",
       title: "Staffbase Profile Field ID",
-      default: "firstName", // Changed from first_name
+      default: "hiredate",
     },
-    accentColor: {
+    accentcolor: {
       type: "string",
       title: "Accent Color",
       format: "color",
@@ -25,8 +25,5 @@ export const configurationSchema: JSONSchema7 = {
 };
 
 export const uiSchema: UiSchema = {
-  "ui:order": ["fieldLabel", "profileFieldId", "accentColor"],
-  profileFieldId: {
-    "ui:help": "Enter 'firstName' or your CSV column ID (e.g. 'department').",
-  },
+  "ui:order": ["fieldlabel", "profilefieldid", "accentcolor"],
 };
