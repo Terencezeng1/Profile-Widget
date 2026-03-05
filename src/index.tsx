@@ -1,15 +1,4 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import {
-  BlockFactory,
-  BlockDefinition,
-  ExternalBlockDefinition,
-  BaseBlock,
-} from "widget-sdk";
-import { ProfileWidgetProps, ProfileWidget } from "./profile-widget";
-import { configurationSchema, uiSchema } from "./configuration-schema";
-import pkg from "../package.json";
-
+// ... keep imports same
 const widgetAttributes: string[] = ["fieldlabel", "items", "accentcolor"];
 
 const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
@@ -19,7 +8,7 @@ const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
     private get props(): ProfileWidgetProps {
       const attrs = this.parseAttributes<any>();
 
-      // CRITICAL FIX: Parse the 'items' string into a real list
+      // LOGIC FIX: Parse the list of items from Staffbase
       let parsedItems = [];
       try {
         parsedItems =
@@ -38,6 +27,7 @@ const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
     }
 
     public async renderBlock(container: HTMLElement): Promise<void> {
+      // Get real user data from the platform
       const user = await _widgetApi.getUserInformation();
       this._root ??= ReactDOM.createRoot(container);
       this._root.render(<ProfileWidget {...this.props} user={user} />);
@@ -53,23 +43,8 @@ const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
       newValue: string,
     ): void {
       super.attributeChangedCallback.apply(this, [name, oldValue, newValue]);
-      this.renderBlock(this);
+      this.renderBlock(this); // Force update in Studio
     }
   };
 };
-
-const blockDefinition: BlockDefinition = {
-  name: "profile-widget",
-  factory: factory,
-  attributes: widgetAttributes,
-  blockLevel: "block",
-  configurationSchema,
-  uiSchema,
-  label: "Profile Table",
-};
-
-window.defineBlock({
-  blockDefinition,
-  author: pkg.author,
-  version: pkg.version,
-});
+// ... rest of file same

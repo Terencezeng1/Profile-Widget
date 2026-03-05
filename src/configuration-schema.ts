@@ -15,7 +15,7 @@ export const configurationSchema: JSONSchema7 = {
       format: "color",
       default: "#00A1DF",
     },
-    // This creates the "Add Item" button and list
+    // This creates the dynamic 'Add Item' list
     items: {
       type: "array",
       title: "Profile Data Rows",
@@ -32,8 +32,9 @@ export const configurationSchema: JSONSchema7 = {
           },
         },
       },
+      // Set defaults so you see data immediately
       default: [
-        { label: "Name", fieldid: "firstName" },
+        { label: "First Name", fieldid: "firstName" },
         { label: "Hire Date", fieldid: "hiredate" },
       ],
     },

@@ -48,6 +48,7 @@ export const ProfileWidget = ({
         <p>Loading...</p>
       ) : (
         items.map((item, index) => {
+          // Pull the specific data point for this row
           const value =
             user[item.fieldid] || user.profile?.[item.fieldid] || "N/A";
           return (
