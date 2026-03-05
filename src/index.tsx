@@ -31,9 +31,7 @@ const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
     }
 
     public async renderBlock(container: HTMLElement): Promise<void> {
-      // Fetch authenticated user data from the platform
       const user = await _widgetApi.getUserInformation();
-
       this._root ??= ReactDOM.createRoot(container);
       this._root.render(<ProfileWidget {...this.props} user={user} />);
     }
@@ -48,7 +46,7 @@ const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
       newValue: string,
     ): void {
       super.attributeChangedCallback(name, oldValue, newValue);
-      // Force a re-render to ensure settings 'stick' and update the UI
+      // Force the Studio to recognize the new value by re-rendering
       if (oldValue !== newValue) {
         this.renderBlock(this);
       }
@@ -61,8 +59,8 @@ const blockDefinition: BlockDefinition = {
   factory: factory,
   attributes: widgetAttributes,
   blockLevel: "block",
-  configurationSchema: configurationSchema,
-  uiSchema: uiSchema,
+  configurationSchema,
+  uiSchema,
   label: "Profile Widget",
   iconUrl: icon,
 };
