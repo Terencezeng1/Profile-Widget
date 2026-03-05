@@ -5,7 +5,7 @@ export const useUserProfile = (fieldId: string, user: any) => {
 
   useEffect(() => {
     if (user && fieldId) {
-      // Check standard fields first, then the profile object for CSV data
+      // Logic: check user root, then user.profile, then return N/A
       const value = user[fieldId] || user.profile?.[fieldId] || "N/A";
       setData(value);
     }

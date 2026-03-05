@@ -11,7 +11,7 @@ import { configurationSchema, uiSchema } from "./configuration-schema";
 import icon from "../resources/profile-widget.svg";
 import pkg from "../package.json";
 
-// Attributes MUST be lowercase to ensure saving works in Staffbase Studio
+// Must be lowercase to match your working stable build
 const widgetAttributes: string[] = [
   "fieldlabel",
   "profilefieldid",
@@ -32,7 +32,9 @@ const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
     }
 
     public async renderBlock(container: HTMLElement): Promise<void> {
+      // Pulls the real Jane/Hiredate data safely
       const user = await _widgetApi.getUserInformation();
+
       this._root ??= ReactDOM.createRoot(container);
       this._root.render(<ProfileWidget {...this.props} user={user} />);
     }
@@ -47,8 +49,15 @@ const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
       newValue: string,
     ): void {
       super.attributeChangedCallback.apply(this, [name, oldValue, newValue]);
-      // The saving fix: force an immediate re-render on any change
-      this.renderBlock(this);
+
+      /**
+       * THE INFINITE LOOP FIX:
+       * Only re-render if the value actually changed.
+       * This prevents the 'Script Error' popups and browser freezes.
+       */
+      if (oldValue !== newValue) {
+        this.renderBlock(this);
+      }
     }
   };
 };
