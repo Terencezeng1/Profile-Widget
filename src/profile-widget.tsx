@@ -39,19 +39,15 @@ export const ProfileWidget = ({
           color: "#64748b",
           fontSize: "13px",
           textTransform: "uppercase",
-          letterSpacing: "0.05em",
         }}
       >
         {fieldlabel || "Profile Information"}
       </h3>
 
       {!user ? (
-        <p style={{ color: "#94a3b8", fontStyle: "italic" }}>
-          Loading user data...
-        </p>
+        <p>Loading...</p>
       ) : (
         items.map((item, index) => {
-          // Check standard fields first, then CSV profile fields
           const value =
             user[item.fieldid] || user.profile?.[item.fieldid] || "N/A";
           return (

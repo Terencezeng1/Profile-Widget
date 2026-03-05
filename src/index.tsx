@@ -1,21 +1,38 @@
-// ... (imports remain the same)
+import React from "react";
+import ReactDOM from "react-dom/client";
+import {
+  BlockFactory,
+  BlockDefinition,
+  ExternalBlockDefinition,
+  BaseBlock,
+} from "widget-sdk";
+import { ProfileWidgetProps, ProfileWidget } from "./profile-widget";
+import { configurationSchema, uiSchema } from "./configuration-schema";
+import pkg from "../package.json";
 
-// Logic Fix: Update attributes to include 'items'
 const widgetAttributes: string[] = ["fieldlabel", "items", "accentcolor"];
 
 const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
   return class ProfileWidgetBlock extends BaseBlockClass implements BaseBlock {
-    // ... constructor remains same
+    private _root: ReactDOM.Root | null = null;
 
     private get props(): ProfileWidgetProps {
-      // Logic Fix: items arrives as a JSON string from the Studio, so we parse it
       const attrs = this.parseAttributes<any>();
-      return {
-        ...attrs,
-        items:
+
+      // CRITICAL FIX: Parse the 'items' string into a real list
+      let parsedItems = [];
+      try {
+        parsedItems =
           typeof attrs.items === "string"
             ? JSON.parse(attrs.items)
-            : attrs.items,
+            : attrs.items || [];
+      } catch (e) {
+        parsedItems = [];
+      }
+
+      return {
+        ...attrs,
+        items: parsedItems,
         contentLanguage: this.contentLanguage,
       };
     }
@@ -41,4 +58,18 @@ const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
   };
 };
 
-// ... (blockDefinition and window.defineBlock remain the same)
+const blockDefinition: BlockDefinition = {
+  name: "profile-widget",
+  factory: factory,
+  attributes: widgetAttributes,
+  blockLevel: "block",
+  configurationSchema,
+  uiSchema,
+  label: "Profile Table",
+};
+
+window.defineBlock({
+  blockDefinition,
+  author: pkg.author,
+  version: pkg.version,
+});

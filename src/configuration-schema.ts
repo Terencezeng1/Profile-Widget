@@ -6,7 +6,7 @@ export const configurationSchema: JSONSchema7 = {
   properties: {
     fieldlabel: {
       type: "string",
-      title: "Table Title",
+      title: "Table Header",
       default: "Employee Details",
     },
     accentcolor: {
@@ -15,16 +15,16 @@ export const configurationSchema: JSONSchema7 = {
       format: "color",
       default: "#00A1DF",
     },
-    // The "Add Item" list logic starts here
+    // This creates the "Add Item" button and list
     items: {
       type: "array",
-      title: "Data Rows",
+      title: "Profile Data Rows",
       items: {
         type: "object",
         properties: {
           label: {
             type: "string",
-            title: "Display Label (e.g., Hire Date)",
+            title: "Row Label (e.g., Hire Date)",
           },
           fieldid: {
             type: "string",
@@ -33,8 +33,8 @@ export const configurationSchema: JSONSchema7 = {
         },
       },
       default: [
-        { label: "First Name", fieldid: "firstName" },
-        { label: "Date Joined", fieldid: "hiredate" },
+        { label: "Name", fieldid: "firstName" },
+        { label: "Hire Date", fieldid: "hiredate" },
       ],
     },
   },
@@ -42,9 +42,4 @@ export const configurationSchema: JSONSchema7 = {
 
 export const uiSchema: UiSchema = {
   "ui:order": ["fieldlabel", "items", "accentcolor"],
-  items: {
-    items: {
-      "ui:order": ["label", "fieldid"],
-    },
-  },
 };
