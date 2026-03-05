@@ -1,32 +1,23 @@
-// src/hooks/use-user-profile.ts
 import { useState, useEffect } from "react";
 
-export const useUserProfile = (fieldId: string) => {
+/**
+ * Hook to extract a specific field from the Staffbase User object.
+ * @param fieldId The internal ID of the field (e.g., 'firstName' or 'department')
+ * @param user The user object provided by the Staffbase Widget SDK
+ */
+export const useUserProfile = (fieldId: string, user: any) => {
   const [data, setData] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        // Use a relative path so Staffbase handles the auth cookies automatically
-        const response = await fetch("/api/users/me");
-        if (!response.ok) throw new Error("Not logged in");
+    if (user && fieldId) {
+      // Staffbase stores standard fields at the top level (e.g., firstName)
+      // and custom CSV-uploaded data inside the 'profile' object.
+      const value = user[fieldId] || user.profile?.[fieldId] || "N/A";
+      setData(value);
+    } else if (!fieldId) {
+      setData(null);
+    }
+  }, [fieldId, user]);
 
-        const user = await response.json();
-
-        // CSV data is usually nested in the 'profile' object
-        const value = user.profile?.[fieldId] || user[fieldId] || "N/A";
-        setData(value);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Error");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (fieldId) fetchProfile();
-  }, [fieldId]);
-
-  return { data, loading, error };
+  return { data };
 };

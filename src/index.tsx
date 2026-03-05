@@ -47,20 +47,29 @@ const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
       };
     }
 
-    public renderBlock(container: HTMLElement): void {
+    public async renderBlock(container: HTMLElement): Promise<void> {
+      // Official SDK method to get the current user information
+      const user = await _widgetApi.getUserInformation();
+
       this._root ??= ReactDOM.createRoot(container);
-      this._root.render(<ProfileWidget {...this.props} />);
+      this._root.render(<ProfileWidget {...this.props} user={user} />);
     }
 
+    /**
+     * The observed attributes, where the widgets reacts on.
+     */
     public static get observedAttributes(): string[] {
       return widgetAttributes;
     }
 
+    /**
+     * Callback invoked on every change of an observed attribute.
+     */
     public attributeChangedCallback(
       ...args: [string, string | undefined, string | undefined]
     ): void {
       super.attributeChangedCallback.apply(this, args);
-      // Logic Fix: This tells the widget to re-draw when settings change
+      // Trigger a re-render so the widget updates immediately when config changes
       this.renderBlock(this);
     }
   };
