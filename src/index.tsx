@@ -11,7 +11,7 @@ import { configurationSchema, uiSchema } from "./configuration-schema";
 import icon from "../resources/profile-widget.svg";
 import pkg from "../package.json";
 
-// attributes must be lowercase to ensure saving works in Staffbase Studio
+// Attributes MUST be lowercase to ensure saving works in Staffbase Studio
 const widgetAttributes: string[] = [
   "fieldlabel",
   "profilefieldid",
@@ -47,10 +47,8 @@ const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
       newValue: string,
     ): void {
       super.attributeChangedCallback.apply(this, [name, oldValue, newValue]);
-      // The saving fix: force re-render on change
-      if (oldValue !== newValue) {
-        this.renderBlock(this);
-      }
+      // The saving fix: force an immediate re-render on any change
+      this.renderBlock(this);
     }
   };
 };
