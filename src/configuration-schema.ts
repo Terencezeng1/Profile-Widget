@@ -7,13 +7,15 @@ export const configurationSchema: JSONSchema7 = {
   properties: {
     fieldlabel: {
       type: "string",
-      title: "Display Label",
-      default: "Profile Information",
+      title: "Table Header / Label",
+      default: "Employee Details",
     },
     profilefieldid: {
       type: "string",
-      title: "Staffbase Profile Field ID",
-      default: "firstName",
+      title: "Staffbase Profile Field IDs",
+      description:
+        "Enter field IDs separated by commas (e.g., 'firstName,hiredate,department')",
+      default: "firstName,hiredate",
     },
     accentcolor: {
       type: "string",
