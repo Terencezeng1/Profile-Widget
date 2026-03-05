@@ -1,71 +1,69 @@
 import React, { ReactElement } from "react";
 import { BlockAttributes } from "widget-sdk";
-import { useUserProfile } from "./hooks/use-user-profile";
 
 export interface ProfileWidgetProps extends BlockAttributes {
   fieldlabel: string;
-  profilefieldid: string;
+  items: Array<{ label: string; fieldid: string }>;
   accentcolor: string;
   user?: any;
 }
 
 export const ProfileWidget = ({
   fieldlabel,
-  profilefieldid,
+  items,
   accentcolor,
   user,
 }: ProfileWidgetProps): ReactElement => {
-  // Logic Fix: Split the IDs and create a list of labels and values
-  const fieldIds = profilefieldid
-    ? profilefieldid.split(",").map((id) => id.trim())
-    : [];
-
-  const tableStyle: React.CSSProperties = {
+  const cardStyle: React.CSSProperties = {
     backgroundColor: "#fff",
     borderRadius: "12px",
-    padding: "20px",
+    padding: "24px",
     borderLeft: `6px solid ${accentcolor || "#00A1DF"}`,
     boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
     fontFamily: "sans-serif",
     margin: "10px",
-    width: "100%",
-    maxWidth: "450px",
   };
 
   const rowStyle: React.CSSProperties = {
     display: "flex",
     justifyContent: "space-between",
-    padding: "10px 0",
+    padding: "12px 0",
     borderBottom: "1px solid #f1f5f9",
   };
 
   return (
-    <div style={tableStyle}>
+    <div style={cardStyle}>
       <h3
         style={{
-          margin: "0 0 15px 0",
+          margin: "0 0 16px 0",
           color: "#64748b",
-          fontSize: "12px",
+          fontSize: "13px",
           textTransform: "uppercase",
+          letterSpacing: "0.05em",
         }}
       >
-        {fieldlabel || "Profile Data"}
+        {fieldlabel || "Profile Information"}
       </h3>
 
       {!user ? (
-        <p>Loading...</p>
+        <p style={{ color: "#94a3b8", fontStyle: "italic" }}>
+          Loading user data...
+        </p>
       ) : (
-        fieldIds.map((id) => {
-          // Get value for each ID from the user object or profile sub-object
-          const val = user[id] || user.profile?.[id] || "N/A";
+        items.map((item, index) => {
+          // Check standard fields first, then CSV profile fields
+          const value =
+            user[item.fieldid] || user.profile?.[item.fieldid] || "N/A";
           return (
-            <div key={id} style={rowStyle}>
+            <div key={index} style={rowStyle}>
               <span
                 style={{ fontWeight: 600, color: "#475569", fontSize: "14px" }}
               >
-                {id}:
+                {item.label}
               </span>
-              <span style={{ color: "#1e293b", fontSize: "14px" }}>{val}</span>
+              <span style={{ color: "#1e293b", fontSize: "14px" }}>
+                {value}
+              </span>
             </div>
           );
         })
