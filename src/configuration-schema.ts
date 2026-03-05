@@ -34,7 +34,7 @@ export const configurationSchema: JSONSchema7 = {
       title: "Staffbase Profile Field ID",
       description:
         "The internal ID of the field from Staffbase Studio (e.g., 'external_id' or 'custom_field_1')",
-      default: "first_name",
+      default: "firstName",
     },
     accentColor: {
       type: "string",

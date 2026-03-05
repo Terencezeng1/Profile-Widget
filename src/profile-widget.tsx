@@ -36,6 +36,7 @@ export const ProfileWidget = ({
           color: "#94a3b8",
           textTransform: "uppercase",
           display: "block",
+          letterSpacing: "0.05em",
         }}
       >
         {fieldLabel || "User Data"}

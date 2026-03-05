@@ -31,7 +31,7 @@ const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
     }
 
     public async renderBlock(container: HTMLElement): Promise<void> {
-      // Use the SDK to get real user data
+      // Fetch authenticated user data from the platform
       const user = await _widgetApi.getUserInformation();
 
       this._root ??= ReactDOM.createRoot(container);
